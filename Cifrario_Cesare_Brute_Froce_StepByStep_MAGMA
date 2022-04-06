@@ -1,0 +1,36 @@
+text:="luke skywalker tornato al suo remoto pianeta natale tatooine";
+// print text;
+ElementToSequence(text);                                                        // mette le stringe in sequenza
+// E:=ElementToSequence(text);                                  // Parent(E);             // E è la mia sequeza di singoli caratteri
+// BString(text);                                                               // Converto ogni carattere nel suo numero in base al sistema UNIX
+L:=BString(text);                                               // Parent(L);             // L è la mia Lista contenete i caratteri
+MEX_NUM:=Eltseq(L); // MEX_NUM;     // stampo MEX_NUM se serve  // Parent( );             // creo MEX_NUM come sequenza di interi a partire da L
+KEY:=Random(100) mod 30;                                   // Parent(KEY); // assegno valore alla chiave per shiftare (metto mod 255 perche 30 sono i caratteri delle lettere di tutto l'alfabeto + alcuni speciali)
+
+// CODIFICA
+MEX_NUM_COD := [a+KEY : a in MEX_NUM];                                          // creo MEX_NUM_COD vettore con i nuovi interi aggiorneti con sommato il valore della key
+print "il messaggio cifrato in numeri è: \n" , MEX_NUM_COD;     // Parent();    // stampo MEX_NUM_COD
+C:=[CodeToString(c) : c in MEX_NUM_COD];                        // C è il testo cifrato         // converto in stringhe i numeri
+
+// STAMPA MESSAGGIO CODIFICATO
+print "il messaggio cifrato in lettere è: \n" , C;                              // stampo C
+
+// DECODIFICA
+D:=[BString(d) : d in SequenceToList(C)];                                       // converto la stringa C in numeri
+EE:=ElementToSequence(D);                                                       // la trasformo in una sequenza di singoli caratteri
+VV:=Eltseq(EE);                                                                 // creo VV cosi che sia un vettore
+MEX_D := &cat VV;                                                               // creo un array con i valori trovati
+MEX_D_Vett:=Eltseq(MEX_D);                                                      // uso un vettore seq numerico
+BF:=[-30..30];                                                                  // parametri di shift per le keys (essendo messaggi le lettere possono essere shiftate di tutto l'alfabeto in avanti o indietro)
+
+for u in BF do                                                                  // inizio ciclo brutte_force
+  print" ";
+  print "Key Shift ", u;                                                        // stampe info val key
+  MEX_DD:=[Abs(v-u) : v in MEX_D_Vett];                                              // rimuovo i valori della key
+  print "Stringa numerica:      \n" , MEX_DD;                                   // stampa vettore numerico
+  for r in MEX_DD do                                                            // ciclo for decodifica
+    Mex_Decodificato:=[CodeToString(r) : r in MEX_DD];                          // per ogni r indice di un numero in MEX_DD converti il num in stringa
+  end for;                                                                      // fine ciclo conversione
+  print "Messaggio decodificato: \n" , Mex_Decodificato;                        // stampa msg decodificato
+  print " \n";                                                                  // stampe layout
+end for;                                                                        // stampe layout

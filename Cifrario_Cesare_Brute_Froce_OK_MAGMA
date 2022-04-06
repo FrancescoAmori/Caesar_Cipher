@@ -1,0 +1,84 @@
+////////////////////////////////////////////////////
+//                                                //
+//  V e' cio' che devo passare alle funzioni !!!  //
+//                                                //
+////////////////////////////////////////////////////
+
+Chr:="abcdefghijklmnopqrstuvwxz ,.:;-_*/?'^!1234567890ABCDEFGHIJKLMNPQRSTUVWXZ"; // caratteri ammessi
+// #Chr;                                                                           // size dei caratteri
+
+text:="luke skywalker tornato al suo remoto pianeta natale tatooine nel tentativo di strappare il suo amico han solo dalle grinfie del malvagio jabba de hutt...";
+
+// print text;
+// ElementToSequence(text);                                                     // mette le stringe in sequenza
+E:=ElementToSequence(text);                           // Parent(E);             // E è la mia sequeza di singoli caratteri
+BString(text);                                                                  // Converto ogni carattere nel suo numero in base al sistema UNIX
+L:=BString(text);                                     // Parent(L);             // L è la mia Lista contenete i caratteri
+V:=Eltseq(L);        // V;   // stampo V se voglio    // Parent(V);             // creo V come sequenza di interi a partire da L
+KEY:=Random(100) mod 30;                              // Parent(KEY);           // assegno valore alla chiave per shiftare (metto mod 255 perche 30 sono i caratteri delle lettere di tutto l'alfabeto + alcuni speciali)
+
+// CODIFICA
+function Codifica(V)
+  N := [a+KEY : a in V];       // N;  // Parent(N);   // stampo N               // creo N vettore con i nuovi interi aggiorneti con sommato il valore della key
+  print " ";
+  C:=[CodeToString(c) : c in N];                                                // converto in stringhe i numeri
+
+  // STAMPA MESSAGGIO CODIFICATO
+  print "\n Il messaggio ricevuto cifrato in lettere e' : ";
+  C;
+  print " ";
+  print " Il messaggio ricevuto cifrato in numeri e' : ";
+  N;
+  return C;                                                                     // stampo C
+end function;
+
+// DECODIFICA CON CHIAVE ESATTA
+function Stampa_Msg_Esatto_Decod(V);
+  C:=Codifica(V);                                                               // <- la funzione lo codifica con una chiave e poi inizia la decodifica con BruteForce
+  D:=[BString(d) : d in SequenceToList(C)];                                     // converto la stringa C in numeri
+  EE:=ElementToSequence(D);                                                     // la trasformo in una sequenza di singoli caratteri
+  VV:=Eltseq(EE);                                                               // creo VV cosi che sia un vettore
+  MEX_D := &cat VV;
+  MEX_D_Vett:=Eltseq(MEX_D);                                                    // uso un vettore seq numerico
+  BF_ESATTO:=[KEY];                                                               // parametro di shift per la key
+  for u in BF_ESATTO do                                                                  // inizio ciclo brutte_force
+    MEX_DD:=[v-u : v in MEX_D_Vett];                                              // rimuovo i valori della key
+    print "\n\n APPLICO LA KEY AL MSG IN NUMERI E LO RICONVERTO IN CARATTERI \n"; // stampa di layout
+    print " Stringa numerica decodificata :     \n" , MEX_DD;                     // stampa vettore numerico
+    print "\n";                                                                   // stampa di layout
+    for r in MEX_DD do                                                            // ciclo for decodifica
+      Mex_Decodificato:=[CodeToString(r) : r in MEX_DD];                          // per ogni r indice di un numero in MEX_DD converti il num in stringa
+    end for;                                                                      // fine ciclo conversione
+    print " Messaggio numerico decodificato : ";                                  // stampa msg decodificato
+    return Mex_Decodificato;                                                      // ritona il msg
+    print " ";                                                                  // stampe layout
+  end for;
+end function;
+
+// DECODIFICA BRUTE FORCE
+function Codifica_Decodifica_BruteForce(V)                                      // <- V = messaggio in chiaro
+  C:=Codifica(V);                                                               // <- la funzione lo codifica con una chiave e poi inizia la decodifica con BruteForce
+  D:=[BString(d) : d in SequenceToList(C)];                                     // converto la stringa C in numeri
+  EE:=ElementToSequence(D);                                                     // la trasformo in una sequenza di singoli caratteri
+  VV:=Eltseq(EE);                                                               // creo VV cosi che sia un vettore
+  MEX_D := &cat VV;                                                             // creo un array con i valori trovati
+  MEX_D_Vett:=Eltseq(MEX_D);                                                    // uso un vettore seq numerico
+  print " Inizio Decodifica con Brute_Force : \n";                              // stampe layout
+  BF:=[-30..30];                                                                   // parametri di shift per le keys
+    for u in BF do                                                              // inizio ciclo brutte_force
+      print " Key Shift ", u;                                                      // stampe info val key
+      MEX_DD:=[(v-u) : v in MEX_D_Vett];                                           // rimuovo i valori della key
+      print " Stringa numerica :     \n" ,MEX_DD;                                  // stampa vettore numerico
+      for r in MEX_DD do                                                        // ciclo for decodifica
+        Mex_Decodificato:=[CodeToString(r) : r in MEX_DD];                      // per ogni r indice di un numero in MEX_DD converti il num in stringa
+      end for;                                                                  // fine for conversione
+      print " Messaggio decodificato :\n" ,Mex_Decodificato;                     // stampa msg decodificato
+      print " \n";                                                              // stampe layout
+      print " \n";                                                              // stampe layout
+    end for;                                                                    // fine ciclo for Brute_Froce
+    print "\n Le Keys utilizzate sono state :", BF;                             // stampa info keys provate
+    print "\n Lo Shift Key uilizzato per crittografare e' : ", KEY;                // stampa la chiave usata per crittare/decrittare
+    return Stampa_Msg_Esatto_Decod(V);                                          // stampa return delle chiavi usate
+end function;                                                                   // fine function
+
+Codifica_Decodifica_BruteForce(V);                                              // V è il messaggio originale trasformato in sequenza di numeri numeri
